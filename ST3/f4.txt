@@ -1,0 +1,3 @@
+The length of shortest path from A to F is 24
+Path:
+A -> B -> C -> E -> D -> F

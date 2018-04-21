@@ -1,0 +1,6 @@
+dog|cho
+one|1
+four|4
+six|6
+three|8
+school|truong hoc
