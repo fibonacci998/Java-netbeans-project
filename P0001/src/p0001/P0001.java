@@ -169,6 +169,8 @@ public class P0001 extends javax.swing.JFrame {
 
     private void btnVisualizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVisualizeActionPerformed
         // TODO add your handling code here
+        pnGraph.removeAll();
+        
         AnalizeGraphInput analize=new AnalizeGraphInput(txtInput.getText().toString());
         String name=analize.getNameGraph();
         txtLabelGraph.setText("Graph - "+name);

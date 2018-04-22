@@ -5,11 +5,15 @@
  */
 package p0001;
 
+import java.awt.BasicStroke;
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Stroke;
+import java.awt.geom.AffineTransform;
 import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.Map;
@@ -67,6 +71,7 @@ public class DrawGraph extends Canvas{
             
             it.remove();
         }
+        drawArrow(g, 30, 30, 200, 200);
     }
 
     private void drawVertice(Graphics2D g2, String name, String label, String color,int x,int y) {
@@ -79,16 +84,40 @@ public class DrawGraph extends Canvas{
         }
         g2.setColor(colorBorder);
         
+        float thickness=3;
+        Stroke oldStroke=g2.getStroke();
+        g2.setStroke(new BasicStroke(thickness));
         
         String text=label;
         FontMetrics fm=g2.getFontMetrics();
         int w=fm.stringWidth(text);
         int h=fm.getAscent();
         g2.drawOval(x, y, w*2, h*4);
+        g2.setStroke(oldStroke);
         g2.setColor(Color.BLACK);
+        g2.setFont(new Font("TimesNewRoman", Font.BOLD, 13));
         g2.drawString(text, x+(w/2), y+(h*2));
     }
-
+    void drawArrow(Graphics g, int x1, int y1, int x2, int y2) {
+        Graphics2D g2 = (Graphics2D) g;
+        int ARR_SIZE = 10;
+        float thickness=2;
+        Stroke oldStroke=g2.getStroke();
+        g2.setStroke(new BasicStroke(thickness));
+        double dx = x2 - x1, dy = y2 - y1;
+        double angle = Math.atan2(dy, dx);
+        int len = (int) Math.sqrt(dx*dx + dy*dy);
+        AffineTransform at = AffineTransform.getTranslateInstance(x1, y1);
+        at.concatenate(AffineTransform.getRotateInstance(angle));
+        g2.transform(at);
+        
+        // Draw horizontal arrow starting in (0, 0)
+        g2.drawLine(0, 0, len, 0);
+        g2.fillPolygon(new int[] {len, len-ARR_SIZE, len-ARR_SIZE, len},
+                      new int[] {0, -ARR_SIZE, ARR_SIZE, 0}, 4);
+        g2.setStroke(oldStroke);
+    }
+    
     private int getRanNum(int min, int max) {
         int number = new Random().nextInt(max - min) +min;
         return number;
