@@ -809,6 +809,14 @@ public class MyCalculator extends javax.swing.JFrame {
             return Double.parseDouble(num1)/Double.parseDouble(num2);
         return null;
     }
+    Boolean isNumber(String number){
+        try {
+            Double tempNumber=Double.parseDouble(number);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
     void checkQueue(){
         if (!queue.contains("="))
             if (queue.size()<=3) return;
@@ -818,24 +826,33 @@ public class MyCalculator extends javax.swing.JFrame {
             String temp=queue.poll();
             if (isOperatorString(temp))
                 numOperator++;
+//            if (!vector.isEmpty() && isNumber(vector.firstElement()) && isNumber(temp)){
+//                vector.clear();
+//            }
             vector.add(temp);
+        }
+        for (int i=vector.size()-1;i>0;i--){
+            if (isNumber(vector.get(i)) && isNumber(vector.get(i-1))){
+                vector.remove(i-1);
+            }
         }
         if (numOperator>=2){
             //Double result=new Double(0);
             if (vector.size()==3 && vector.get(2).compareTo("=")==0){
                 Double result=calculateByString(vector.get(0), vector.get(0), vector.get(1));
-                //queue.add(String.valueOf(result));
+                queue.add(String.valueOf(result));
                 number=result;
                 setTextForScreen();
             }else{
                 Double result=calculateByString(vector.get(0), vector.get(2), vector.get(1));
-                //queue.add(String.valueOf(result));
+                queue.add(String.valueOf(result));
                 number=result;
                 setTextForScreen();
-//                for (int i=3;i<vector.size();i++)
-//                    queue.add(vector.get(i));
+                for (int i=3;i<vector.size();i++)
+                    if (vector.get(i).compareToIgnoreCase("=")!=0)
+                    queue.add(vector.get(i));
             }
-            
+            //queue.add(String.valueOf(number));
         }
     }
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
