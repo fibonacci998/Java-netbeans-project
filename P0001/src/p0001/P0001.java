@@ -6,6 +6,17 @@
 package p0001;
 
 import java.awt.Canvas;
+import java.awt.Container;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 
 /**
  *
@@ -17,14 +28,11 @@ public class P0001 extends javax.swing.JFrame {
      * Creates new form P0001
      */
     Graph graph;
+    DrawGraph canvas;
     public P0001() {
         initComponents();
-        analizeGraph();
-    }
-    void analizeGraph(){
+        //init the graph
         graph=new Graph();
-        
-        
     }
     
     /**
@@ -82,6 +90,11 @@ public class P0001 extends javax.swing.JFrame {
         txtLabelGraph.setText("Graph");
 
         btnSave.setText("Save graph as image");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         btnClose.setText("Close");
         btnClose.addActionListener(new java.awt.event.ActionListener() {
@@ -103,10 +116,20 @@ public class P0001 extends javax.swing.JFrame {
 
         openOptionInMenu.setSelected(true);
         openOptionInMenu.setText("Open");
+        openOptionInMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openOptionInMenuActionPerformed(evt);
+            }
+        });
         jMenu1.add(openOptionInMenu);
 
         saveOptionInMenu.setSelected(true);
         saveOptionInMenu.setText("Save");
+        saveOptionInMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveOptionInMenuActionPerformed(evt);
+            }
+        });
         jMenu1.add(saveOptionInMenu);
 
         jMenuBar1.add(jMenu1);
@@ -122,7 +145,7 @@ public class P0001 extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31)
                 .addComponent(btnVisualize, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addGap(18, 29, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnSave)
@@ -130,7 +153,7 @@ public class P0001 extends javax.swing.JFrame {
                         .addComponent(btnClose))
                     .addComponent(pnGraph, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtLabelGraph))
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -139,20 +162,18 @@ public class P0001 extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(148, 148, 148)
-                        .addComponent(btnVisualize)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(txtLabelGraph)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pnGraph, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addComponent(btnVisualize))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(txtLabelGraph)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(pnGraph, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnClose)
                     .addComponent(btnSave))
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         pack();
@@ -160,6 +181,9 @@ public class P0001 extends javax.swing.JFrame {
 
     private void newOptionInMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newOptionInMenuActionPerformed
         // TODO add your handling code here:
+        txtInput.setText("");
+        txtLabelGraph.setText("Graph");
+        pnGraph.removeAll();
     }//GEN-LAST:event_newOptionInMenuActionPerformed
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
@@ -170,17 +194,56 @@ public class P0001 extends javax.swing.JFrame {
     private void btnVisualizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVisualizeActionPerformed
         // TODO add your handling code here
         pnGraph.removeAll();
-        
         AnalizeGraphInput analize=new AnalizeGraphInput(txtInput.getText().toString());
         String name=analize.getNameGraph();
         txtLabelGraph.setText("Graph - "+name);
         analize.analize();
         graph=analize.createGraph();
-        
         DrawGraph draw=new DrawGraph(graph);
-        Canvas canvas=draw.getCanvas();
+        canvas=(DrawGraph) draw.getCanvas();
         pnGraph.add(canvas);
     }//GEN-LAST:event_btnVisualizeActionPerformed
+
+    private void saveOptionInMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveOptionInMenuActionPerformed
+        // TODO add your handling code here:
+        JFileChooser fileChooser=new JFileChooser();
+        //set directory of open function at same directory's project
+        fileChooser.setCurrentDirectory(new File("."));
+        int result=fileChooser.showSaveDialog(jMenu1);
+        if (result==JFileChooser.APPROVE_OPTION){
+            File file=fileChooser.getSelectedFile();
+            BufferedImage image=new BufferedImage(300, 300, BufferedImage.TYPE_INT_RGB);
+            Graphics2D g2=(Graphics2D) image.getGraphics();
+            canvas.paintWithSavedData(g2);
+            try {
+                ImageIO.write(image, "png", file);
+            } catch (IOException ex) {
+                Logger.getLogger(P0001.class.getName()).log(Level.SEVERE, null, ex);
+            }    
+        }
+        
+    }//GEN-LAST:event_saveOptionInMenuActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        // TODO add your handling code here:
+        saveOptionInMenuActionPerformed(evt);
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void openOptionInMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openOptionInMenuActionPerformed
+        // TODO add your handling code here:
+        JFileChooser fileChooser=new JFileChooser();
+        //set directory of open function at same directory's project
+        fileChooser.setCurrentDirectory(new File("."));
+        if (fileChooser.showOpenDialog(jMenu1)==JFileChooser.APPROVE_OPTION){
+            File f=fileChooser.getSelectedFile();
+            JLabel jl=new JLabel();
+            jl.setSize(300, 300);
+            jl.setIcon(new ImageIcon(f.toString()));
+            jl.setHorizontalAlignment(JLabel.CENTER);
+            pnGraph.add(jl);
+            pnGraph.repaint();
+        }
+    }//GEN-LAST:event_openOptionInMenuActionPerformed
 
     /**
      * @param args the command line arguments

@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1522819189 source:d:\google drive\datacode\democ++\main.cpp
+	<iostream>
+	<cstdio>
+	<queue>
+	<vector>
+

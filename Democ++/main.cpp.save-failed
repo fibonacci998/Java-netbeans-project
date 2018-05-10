@@ -1,0 +1,16 @@
+#include <iostream>
+#include <cstdio>
+using namespace std;
+int getNum(int xMin,int xMax){
+    stringstream ss;
+    try{
+        int temp;
+        cin>>temp;
+        return temp;
+    }catch(exception e){
+        cout<<"ERROR!!!!!!!"<<endl;
+    }
+}
+int main(){
+
+}
