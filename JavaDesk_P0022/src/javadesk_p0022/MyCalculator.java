@@ -7,6 +7,7 @@ package javadesk_p0022;
 
 import java.text.DecimalFormat;
 import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Vector;
@@ -27,7 +28,7 @@ public class MyCalculator extends javax.swing.JFrame {
     Boolean wantDouble=false;
     int powAfterDot=1;
     int memory=0;
-    Queue<String> queue=new LinkedList<>();
+    Deque<String> queue=new ArrayDeque<>();
     public MyCalculator() {
         initComponents();
         setTextForScreen();
@@ -857,6 +858,10 @@ public class MyCalculator extends javax.swing.JFrame {
     }
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
+        if ((queue.size()>=2) && isOperatorString(queue.getLast())){
+            queue.removeLast();
+            queue.removeLast();
+        }
         queue.add(String.valueOf(number));
         queue.add("+");
         checkQueue();
@@ -906,6 +911,10 @@ public class MyCalculator extends javax.swing.JFrame {
 
     private void btnDivisionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDivisionActionPerformed
         // TODO add your handling code here:
+        if ((queue.size()>=2) && isOperatorString(queue.getLast())){
+            queue.removeLast();
+            queue.removeLast();
+        }
         queue.add(String.valueOf(number));
         queue.add("/");
         checkQueue();
@@ -986,6 +995,10 @@ public class MyCalculator extends javax.swing.JFrame {
 
     private void btnSubtractActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubtractActionPerformed
         // TODO add your handling code here:
+        if ((queue.size()>=2) && isOperatorString(queue.getLast())){
+            queue.removeLast();
+            queue.removeLast();
+        }
         queue.add(String.valueOf(number));
         queue.add("-");
         checkQueue();
@@ -998,6 +1011,11 @@ public class MyCalculator extends javax.swing.JFrame {
 
     private void btnMultiplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMultiplyActionPerformed
         // TODO add your handling code here:
+        if ((queue.size()>=2) && isOperatorString(queue.getLast())){
+            queue.removeLast();
+            queue.removeLast();
+        }
+        
         queue.add(String.valueOf(number));
         queue.add("*");
         checkQueue();
